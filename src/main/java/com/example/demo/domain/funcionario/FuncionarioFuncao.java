@@ -13,4 +13,8 @@ public enum FuncionarioFuncao {
     public String getFuncao(){
         return funcao;
     }
+
+    public boolean isGestor() {
+        return this == gestor;
+    }
 }

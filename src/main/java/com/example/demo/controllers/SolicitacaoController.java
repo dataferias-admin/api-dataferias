@@ -2,6 +2,8 @@ package com.example.demo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -29,22 +31,27 @@ public class SolicitacaoController {
     @Autowired
     private FuncionarioRepository funcionarioRepository;
 
+
     @GetMapping
+    @PreAuthorize("@jwtUtil.isGestorFromRequest(#root)")
     public List<Solicitacao> listarSolicitacaos() {
         return solicitacaoRepository.findAll();
     }
 
     @GetMapping("/pendentes")
+    @PreAuthorize("@jwtUtil.isGestorFromRequest(#root)")
     public List<Solicitacao> listarSolicitacoesPendentes() {
         return solicitacaoRepository.findByStatus(com.example.demo.domain.solicitacao.SolicitacaoStatus.pendente);
     }
 
     @GetMapping("/funcionario/{matricula}")
+    @PreAuthorize("isAuthenticated()")
     public List<Solicitacao> listarSolicitacaoByMatricula(@PathVariable String matricula) {
         return solicitacaoRepository.findBySolicitanteMatricula(matricula);
     }
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Solicitacao> criarSolicitacao(@RequestBody Solicitacao solicitacao) {
         // Buscar e associar o solicitante existente
         if (solicitacao.getSolicitante() != null) {
@@ -65,9 +72,10 @@ public class SolicitacaoController {
     }
 
     @PatchMapping("/{uuid}")
+    @PreAuthorize("@jwtUtil.isGestorFromRequest(#root)")
     public ResponseEntity<Solicitacao> responderSolicitacao(
-            @PathVariable("uuid") UUID uuid,
-            @RequestBody Solicitacao solicitacaoPatch) {
+        @PathVariable("uuid") UUID uuid,
+        @RequestBody Solicitacao solicitacaoPatch) {
         Optional<Solicitacao> optSolicitacao = solicitacaoRepository.findById(uuid);
         if (optSolicitacao.isEmpty()) {
             return ResponseEntity.notFound().build();

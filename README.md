@@ -1,211 +1,358 @@
+
+# API Dataferias
+
+Documentação das rotas da API para gerenciamento de funcionários e solicitações de férias.
+
+---
+
+## Autenticação
+
+### Login
+
+**POST** `/auth/login`
+
+**Request Body:**
+```json
 {
-  "openapi": "3.0.0",
-  "info": {
-    "title": "dataferias",
-    "version": "1.0.0",
-    "description": ""
-  },
-  "servers": [
-    {
-      "url": "localhost"
-    }
-  ],
-  "paths": {
-    "/funcionarios": {
-      "parameters": [],
-      "get": {
-        "summary": "funcionarios",
-        "tags": [],
-        "parameters": [],
-        "responses": {}
-      },
-      "post": {
-        "summary": "funcionarios",
-        "tags": [],
-        "parameters": [],
-        "responses": {},
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "matricula": {
-                    "type": "string",
-                    "format": "utc-millisec"
-                  },
-                  "nome": {
-                    "type": "string"
-                  },
-                  "funcao": {
-                    "type": "string"
-                  },
-                  "senha": {
-                    "type": "string",
-                    "format": "color"
-                  }
-                }
-              },
-              "example": {
-                "matricula": "25525",
-                "nome": "Matheus Silveira",
-                "funcao": "operacional",
-                "senha": "123456"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/solicitacoes": {
-      "parameters": [],
-      "get": {
-        "summary": "solicitacoes",
-        "tags": [],
-        "parameters": [],
-        "responses": {}
-      },
-      "post": {
-        "summary": "solicitacoes",
-        "tags": [],
-        "parameters": [],
-        "responses": {},
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "solicitante": {
-                    "type": "object",
-                    "properties": {
-                      "matricula": {
-                        "type": "string",
-                        "format": "utc-millisec"
-                      }
-                    }
-                  },
-                  "data_inicio": {
-                    "type": "string",
-                    "format": "date"
-                  },
-                  "data_fim": {
-                    "type": "string",
-                    "format": "date"
-                  },
-                  "observacao_solicitante": {
-                    "type": "string"
-                  }
-                }
-              },
-              "example": {
-                "solicitante": {
-                  "matricula": "25525"
-                },
-                "data_inicio": "2025-12-08",
-                "data_fim": "2026-01-07",
-                "observacao_solicitante": "Curtir o ano novo"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/solicitacoes/pendentes": {
-      "parameters": [],
-      "get": {
-        "summary": "solicitacoes pendentes",
-        "tags": [],
-        "parameters": [],
-        "responses": {}
-      }
-    },
-    "/solicitacoes/funcionario/45455": {
-      "parameters": [],
-      "get": {
-        "summary": "solicitacoes por funcionário",
-        "tags": [],
-        "parameters": [],
-        "responses": {}
-      }
-    },
-    "/solicitacoes/15e311bb-0987-48c6-b0fa-32456e896803": {
-      "parameters": [],
-      "patch": {
-        "summary": "solicitacoes",
-        "tags": [],
-        "parameters": [],
-        "responses": {},
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "avaliador": {
-                    "type": "object",
-                    "properties": {
-                      "matricula": {
-                        "type": "string",
-                        "format": "utc-millisec"
-                      }
-                    }
-                  },
-                  "justificativa_avaliador": {
-                    "type": "string"
-                  },
-                  "status": {
-                    "type": "string"
-                  }
-                }
-              },
-              "example": {
-                "avaliador": {
-                  "matricula": "40028"
-                },
-                "justificativa_avaliador": "LGTM",
-                "status": "aprovado"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/info/funcionarios/count": {
-      "parameters": [],
-      "get": {
-        "summary": "info funcionarios count",
-        "tags": [],
-        "parameters": [],
-        "responses": {}
-      }
-    },
-    "/info/solicitacoes/pendentes": {
-      "parameters": [],
-      "get": {
-        "summary": "info pendentess count",
-        "tags": [],
-        "parameters": [],
-        "responses": {}
-      }
-    },
-    "/info/solicitacoes/rejeitadas": {
-      "parameters": [],
-      "get": {
-        "summary": "info rejeitadas count",
-        "tags": [],
-        "parameters": [],
-        "responses": {}
-      }
-    },
-    "/info/solicitacoes/aprovadas": {
-      "parameters": [],
-      "get": {
-        "summary": "info aprovadas count",
-        "tags": [],
-        "parameters": [],
-        "responses": {}
-      }
-    }
-  }
+    "matricula": "77777",
+    "senha": "123456"
 }
+```
+
+**Response 200:**
+```json
+{
+    "funcionario": {
+        "funcao": "gestor",
+        "matricula": "77777",
+        "nome": "Túlio Fernandes"
+    },
+    "token": "<jwt_token>"
+}
+```
+
+---
+
+
+## Funcionários
+
+### Listar Funcionários
+
+**GET** `/funcionarios`
+
+**Response 200:**
+```json
+[
+    {
+        "matricula": "12345",
+        "nome": "João Silva",
+        "funcao": "operacional"
+    },
+    {
+        "matricula": "67880",
+        "nome": "Maria Santos",
+        "funcao": "gestor"
+    }
+    // ...
+]
+```
+
+---
+
+
+### Criar Funcionário
+
+**POST** `/funcionarios`
+
+**Request Body:**
+```json
+{
+    "matricula": "77777",
+    "nome": "Túlio Fernandes",
+    "funcao": "gestor",
+    "senha": "123456"
+}
+```
+
+**Response 201:**
+```json
+{
+    "matricula": "77777",
+    "nome": "Túlio Fernandes",
+    "funcao": "gestor"
+}
+```
+
+---
+
+
+## Solicitações
+
+### Listar Solicitações (Gestor)
+
+**GET** `/solicitacoes`
+
+**Headers:**
+- Authorization: Bearer `<token>`
+- Funcionário precisa ser gestor
+
+**Response 200:**
+```json
+[
+    {
+        "uuid": "6953bc00-8dde-48d4-ab91-4ebefcbe9966",
+        "solicitante": {
+            "matricula": "12345",
+            "nome": "João Silva",
+            "funcao": "operacional"
+        },
+        "data_inicio": "2025-09-15",
+        "data_fim": "2025-10-15",
+        "observacao_solicitante": "Viagem em família",
+        "avaliador": {
+            "matricula": "67880",
+            "nome": "Maria Santos",
+            "funcao": "gestor"
+        },
+        "justificativa_avaliador": "Solicitado fora do prazo institucional",
+        "status": "rejeitado",
+        "data_solicitacao": "2025-09-13",
+        "data_avaliacao": "2025-09-14"
+    },
+    {
+        "uuid": "e984864f-6c39-4a30-83c8-a7fd83b11b1c",
+        "solicitante": {
+            "matricula": "77777",
+            "nome": "Túlio Fernandes",
+            "funcao": "gestor"
+        },
+        "data_inicio": "2025-10-01",
+        "data_fim": "2025-10-30",
+        "observacao_solicitante": "Preciso dar uma descansada nesse final de ano. Volto com força para cumprir as baixas de final de ano!",
+        "avaliador": null,
+        "justificativa_avaliador": null,
+        "status": "pendente",
+        "data_solicitacao": "2025-09-18",
+        "data_avaliacao": null
+    }
+    // ...
+]
+```
+
+---
+
+
+### Listar Solicitações Pendentes (Gestor)
+
+**GET** `/solicitacoes/pendentes`
+
+**Headers:**
+- Authorization: Bearer `<token>`
+- Funcionário precisa ser gestor
+
+**Response 200:**
+```json
+[
+    {
+        "uuid": "a837cdcb-e9f6-48a9-b168-dd98b9c4c05f",
+        "solicitante": {
+            "matricula": "25525",
+            "nome": "Matheus Silveira",
+            "funcao": "operacional"
+        },
+        "data_inicio": "2026-02-02",
+        "data_fim": "2026-03-04",
+        "observacao_solicitante": "Curtir o carnaval",
+        "avaliador": null,
+        "justificativa_avaliador": null,
+        "status": "pendente",
+        "data_solicitacao": "2025-09-17",
+        "data_avaliacao": null
+    }
+    // ...
+]
+```
+
+---
+
+
+### Listar Solicitações de um Funcionário
+
+**GET** `/solicitacoes/funcionario/{matricula}`
+
+**Headers:**
+- Authorization: Bearer `<token>`
+
+**Response 200:**
+```json
+[
+    {
+        "uuid": "6953bc00-8dde-48d4-ab91-4ebefcbe9966",
+        "solicitante": {
+            "matricula": "12345",
+            "nome": "João Silva",
+            "funcao": "operacional"
+        },
+        "data_inicio": "2025-09-15",
+        "data_fim": "2025-10-15",
+        "observacao_solicitante": "Viagem em família",
+        "avaliador": {
+            "matricula": "67880",
+            "nome": "Maria Santos",
+            "funcao": "gestor"
+        },
+        "justificativa_avaliador": "Solicitado fora do prazo institucional",
+        "status": "rejeitado",
+        "data_solicitacao": "2025-09-13",
+        "data_avaliacao": "2025-09-14"
+    }
+    // ...
+]
+```
+
+---
+
+
+### Criar Solicitação de Férias
+
+**POST** `/solicitacoes`
+
+**Headers:**
+- Authorization: Bearer `<token>`
+
+**Request Body:**
+```json
+{
+    "solicitante": { "matricula": "12345" },
+    "data_inicio": "2027-01-01",
+    "data_fim": "2026-01-31",
+    "observacao_solicitante": "Curtir o ano novo"
+}
+```
+
+**Response 201:**
+```json
+{
+    "uuid": "63aab397-f74a-471c-a19d-480678795971",
+    "solicitante": {
+        "matricula": "12345",
+        "nome": "João Silva",
+        "funcao": "operacional"
+    },
+    "data_inicio": "2027-01-01",
+    "data_fim": "2026-01-31",
+    "observacao_solicitante": "Curtir o ano novo",
+    "avaliador": null,
+    "justificativa_avaliador": null,
+    "status": "pendente",
+    "data_solicitacao": "2025-09-18",
+    "data_avaliacao": null
+}
+```
+
+---
+
+
+### Avaliar Solicitação (Gestor)
+
+**PATCH** `/solicitacoes/{uuid}`
+
+**Headers:**
+- Authorization: Bearer `<token>`
+- Funcionário precisa ser gestor
+
+**Request Body:**
+```json
+{
+    "avaliador": { "matricula": "77777" },
+    "justificativa_avaliador": "Solicitação repetida",
+    "status": "rejeitado"
+}
+```
+
+**Response 200:**
+```json
+{
+    "uuid": "63aab397-f74a-471c-a19d-480678795971",
+    "solicitante": {
+        "matricula": "12345",
+        "nome": "João Silva",
+        "funcao": "operacional"
+    },
+    "data_inicio": "2027-01-01",
+    "data_fim": "2026-01-31",
+    "observacao_solicitante": "Curtir o ano novo",
+    "avaliador": {
+        "matricula": "77777",
+        "nome": "Túlio Fernandes",
+        "funcao": "gestor"
+    },
+    "justificativa_avaliador": "Solicitação repetida",
+    "status": "rejeitado",
+    "data_solicitacao": "2025-09-18",
+    "data_avaliacao": "2025-09-18"
+}
+```
+
+---
+
+
+## Informações Gerais
+
+### Contar Funcionários
+
+**GET** `/info/funcionarios/count`
+
+**Headers:**
+- Authorization: Bearer `<token>`
+- Funcionário precisa ser gestor
+
+**Response 200:**
+```
+RETORNA UM NÚMERO
+```
+
+---
+
+### Contar Solicitações Pendentes
+
+**GET** `/info/solicitacoes/pendentes`
+
+**Headers:**
+- Authorization: Bearer `<token>`
+- Funcionário precisa ser gestor
+
+**Response 200:**
+```
+RETORNA UM NÚMERO
+```
+
+---
+
+### Contar Solicitações Rejeitadas
+
+**GET** `/info/solicitacoes/rejeitadas`
+
+**Headers:**
+- Authorization: Bearer `<token>`
+- Funcionário precisa ser gestor
+
+**Response 200:**
+```
+RETORNA UM NÚMERO
+```
+
+---
+
+### Contar Solicitações Aprovadas
+
+**GET** `/info/solicitacoes/aprovadas`
+
+**Headers:**
+- Authorization: Bearer `<token>`
+- Funcionário precisa ser gestor
+
+**Response 200:**
+```
+RETORNA UM NÚMERO
+```

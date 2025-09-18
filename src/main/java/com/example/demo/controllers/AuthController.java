@@ -31,8 +31,13 @@ public class AuthController {
         }
         boolean isGestor = funcionario.getFuncao() != null && funcionario.getFuncao().isGestor();
         String token = jwtUtil.generateToken(matricula, isGestor);
-        Map<String, String> response = new HashMap<>();
+        Map<String, Object> response = new HashMap<>();
         response.put("token", token);
+        Map<String, Object> funcionarioData = new HashMap<>();
+        funcionarioData.put("matricula", funcionario.getMatricula());
+        funcionarioData.put("nome", funcionario.getNome());
+        funcionarioData.put("funcao", funcionario.getFuncao() != null ? funcionario.getFuncao().name() : null);
+        response.put("funcionario", funcionarioData);
         return ResponseEntity.ok(response);
     }
 }

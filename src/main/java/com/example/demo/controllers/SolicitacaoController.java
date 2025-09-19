@@ -58,7 +58,11 @@ public class SolicitacaoController {
         // Buscar e associar o solicitante existente
         if (solicitacao.getSolicitante() != null) {
             String matricula = solicitacao.getSolicitante().getMatricula();
-            solicitacao.setSolicitante(funcionarioRepository.findById(matricula).orElse(null));
+            var funcionario = funcionarioRepository.findById(matricula);
+            if (funcionario.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            }
+            solicitacao.setSolicitante(funcionario.get());
         }
         // Buscar e associar o avaliador existente, se informado
         if (solicitacao.getAvaliador() != null) {
@@ -70,7 +74,8 @@ public class SolicitacaoController {
             solicitacao.setData_solicitacao(java.time.LocalDate.now());
         }
         Solicitacao salva = solicitacaoRepository.save(solicitacao);
-        return new ResponseEntity<>(salva, HttpStatus.CREATED);
+        // return new ResponseEntity<>(salva, HttpStatus.CREATED);
+        return ResponseEntity.ok().body(salva);
     }
 
     @PatchMapping("/{uuid}")

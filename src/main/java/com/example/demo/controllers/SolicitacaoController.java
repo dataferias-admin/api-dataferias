@@ -32,26 +32,7 @@ public class SolicitacaoController {
     private FuncionarioRepository funcionarioRepository;
 
 
-    @GetMapping
-    @PreAuthorize("@jwtUtil.isGestorFromRequest(#root)")
-    public List<Solicitacao> listarSolicitacaos() {
-        return solicitacaoRepository.findAll();
-    }
-
-    @GetMapping("/pendentes")
-    @PreAuthorize("@jwtUtil.isGestorFromRequest(#root)")
-    public List<Solicitacao> listarSolicitacoesPendentes() {
-        return solicitacaoRepository.findByStatus(com.example.demo.domain.solicitacao.SolicitacaoStatus.pendente);
-    }
-
-    @GetMapping("/funcionario/{matricula}")
-    @PreAuthorize("isAuthenticated()")
-    public List<Solicitacao> listarSolicitacaoByMatricula(@PathVariable String matricula) {
-        return solicitacaoRepository.findBySolicitanteMatricula(matricula);
-    }
-
     @PostMapping
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Solicitacao> criarSolicitacao(@RequestBody Solicitacao solicitacao) {
         // Buscar e associar o solicitante existente
         if (solicitacao.getSolicitante() != null) {
@@ -69,6 +50,24 @@ public class SolicitacaoController {
         }
         Solicitacao salva = solicitacaoRepository.save(solicitacao);
         return new ResponseEntity<>(salva, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    @PreAuthorize("@jwtUtil.isGestorFromRequest(#root)")
+    public List<Solicitacao> listarSolicitacaos() {
+        return solicitacaoRepository.findAll();
+    }
+
+    @GetMapping("/pendentes")
+    @PreAuthorize("@jwtUtil.isGestorFromRequest(#root)")
+    public List<Solicitacao> listarSolicitacoesPendentes() {
+        return solicitacaoRepository.findByStatus(com.example.demo.domain.solicitacao.SolicitacaoStatus.pendente);
+    }
+
+    @GetMapping("/funcionario/{matricula}")
+    @PreAuthorize("isAuthenticated()")
+    public List<Solicitacao> listarSolicitacaoByMatricula(@PathVariable String matricula) {
+        return solicitacaoRepository.findBySolicitanteMatricula(matricula);
     }
 
     @PatchMapping("/{uuid}")

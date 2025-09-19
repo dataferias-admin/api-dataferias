@@ -38,9 +38,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/funcionarios").permitAll()
                 .requestMatchers(HttpMethod.GET, "/funcionarios").permitAll()
+                .requestMatchers(HttpMethod.POST, "/solicitacoes").permitAll()
 
                 // Autenticado
-                .requestMatchers(HttpMethod.POST, "/solicitacoes").authenticated()
                 .requestMatchers(HttpMethod.GET, "/solicitacoes/funcionario/**").authenticated()
 
                 // Autenticado e gestor (demais checagens via @PreAuthorize nos controllers)

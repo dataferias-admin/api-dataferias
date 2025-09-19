@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -23,6 +24,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/solicitacoes")
 public class SolicitacaoController {
     @Autowired
@@ -50,7 +52,7 @@ public class SolicitacaoController {
         return solicitacaoRepository.findBySolicitanteMatricula(matricula);
     }
 
-    @PostMapping("/nova")
+    @PostMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Solicitacao> criarSolicitacao(@RequestBody Solicitacao solicitacao) {
         // Buscar e associar o solicitante existente

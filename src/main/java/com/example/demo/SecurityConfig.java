@@ -41,7 +41,7 @@ public class SecurityConfig {
 
                 // Autenticado
                 .requestMatchers(HttpMethod.GET, "/solicitacoes/funcionario/**").authenticated()
-                .requestMatchers(HttpMethod.POST, "/solicitacoes/nova").authenticated()
+                .requestMatchers(HttpMethod.POST, "/solicitacoes").authenticated()
 
                 // Autenticado e gestor (demais checagens via @PreAuthorize nos controllers)
                 .requestMatchers(HttpMethod.GET, "/solicitacoes").authenticated()
@@ -56,7 +56,7 @@ public class SecurityConfig {
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 
                 // Qualquer outra rota precisa estar autenticado
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
